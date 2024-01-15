@@ -62,15 +62,20 @@ def rss_load():
 
 
 def cmd_rss_list(update, context):
-    if bool(rss_dict) is False:
+    if not bool(rss_dict):
 
         update.effective_message.reply_text("The database is empty")
     else:
         for title, url_list in rss_dict.items():
             update.effective_message.reply_text(
-                "Title: " + title +
-                "\nrss url: " + url_list[0] +
-                "\nlast checked article: " + url_list[1])
+                (
+                    (
+                        ((f"Title: {title}" + "\nrss url: ") + url_list[0])
+                        + "\nlast checked article: "
+                    )
+                    + url_list[1]
+                )
+            )
 
 
 def cmd_rss_add(update, context):
@@ -105,9 +110,9 @@ def cmd_rss_remove(update, context):
         conn.commit()
         conn.close()
     except sqlite3.Error as e:
-        print('Error %s:' % e.args[0])
+        print(f'Error {e.args[0]}:')
     rss_load()
-    update.effective_message.reply_text("Removed: " + context.args[0])
+    update.effective_message.reply_text(f"Removed: {context.args[0]}")
 
 
 def cmd_help(update, context):
